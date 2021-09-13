@@ -4,6 +4,7 @@ import {wait} from './wait'
 async function run(): Promise<void> {
   try {
     const ms: string = core.getInput('milliseconds')
+    // eslint-disable-next-line i18n-text/no-en
     core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
 
     core.debug(new Date().toTimeString())
@@ -12,7 +13,7 @@ async function run(): Promise<void> {
 
     core.setOutput('time', new Date().toTimeString())
   } catch (error) {
-    core.setFailed(error.message)
+    core.setFailed((error as Error).message)
   }
 }
 
