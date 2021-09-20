@@ -1,0 +1,35 @@
+{
+  "dir": "~/countries/*/states",
+  "recordMode": "directory",
+  "min": 0,
+  "max": 99,
+  "primaryKey": [
+    "id"
+  ],
+  "title": [
+    {
+      "field": "id",
+      "func": "UPPERCASE"
+    },
+    {
+      "const": " - "
+    },
+    {
+      "field": "title"
+    }
+  ],
+  "fields": [
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "minLen": 2,
+      "maxLen": 2
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true
+    }
+  ]
+}
