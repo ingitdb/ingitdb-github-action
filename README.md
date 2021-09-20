@@ -2,7 +2,7 @@
 
 # inGitDB GitHub Action
 
-<a href="https://github.com/actions/ingitdb/ingitdb-github-action">https://github.com/ingitdb-github-actions/ingitdb/ingitdb-github-action</a>
+<a href="https://github.com/actions/ingitdb/ingitdb-github-action">https://github.com/ingitdb/ingitdb-github-action</a>
 
 ## Code in Main
 
