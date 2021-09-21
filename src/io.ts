@@ -6,7 +6,7 @@
 import {readFileSync} from 'fs'
 
 // Function to read and parse a JSON
-export function readJSON(filename: string): any {
+export function readJSON(filename: string): unknown {
   const buffer = readFileSync(filename)
   return JSON.parse(buffer.toString())
 }
