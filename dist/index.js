@@ -16,8 +16,8 @@ exports.readJSON = void 0;
 const fs_1 = __nccwpck_require__(747);
 // Function to read and parse a JSON
 function readJSON(filename) {
-    const s = (0, fs_1.readFileSync)(filename);
-    return s.toJSON();
+    const buffer = (0, fs_1.readFileSync)(filename);
+    return JSON.parse(buffer.toString());
 }
 exports.readJSON = readJSON;
 
