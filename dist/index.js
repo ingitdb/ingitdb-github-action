@@ -2,6 +2,28 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 915:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.readJSON = void 0;
+// import the fs module, which allows us to do filesystem operations
+// fs comes from nodejs, this is impossible with normal javascript
+// running in a browser.
+// You do not need to install this dependency, it is part of the
+// standard library.
+const fs_1 = __nccwpck_require__(747);
+// Function to read and parse a JSON
+function readJSON(filename) {
+    const s = (0, fs_1.readFileSync)(filename);
+    return s.toJSON();
+}
+exports.readJSON = readJSON;
+
+
+/***/ }),
+
 /***/ 109:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -36,17 +58,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
+const io_1 = __nccwpck_require__(915);
 const wait_1 = __nccwpck_require__(817);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const ms = core.getInput('milliseconds');
+            const data = (0, io_1.readJSON)(".ingitdb/.ingitdb.json");
+            // eslint-disable-next-line no-console
+            console.log(".ingitdb.json:", data);
+            const ms = core.getInput("milliseconds");
             // eslint-disable-next-line i18n-text/no-en
             core.debug(`Waiting ${ms} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
             core.debug(new Date().toTimeString());
             yield (0, wait_1.wait)(parseInt(ms, 10));
             core.debug(new Date().toTimeString());
-            core.setOutput('time', new Date().toTimeString());
+            core.setOutput("time", new Date().toTimeString());
         }
         catch (error) {
             core.setFailed(error.message);
