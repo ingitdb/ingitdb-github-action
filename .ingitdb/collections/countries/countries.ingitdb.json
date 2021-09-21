@@ -1,5 +1,4 @@
 {
-  "dir": "~/countries",
   "recordMode": "directory",
   "min": 2,
   "max": 99,
@@ -23,8 +22,8 @@
       "name": "id",
       "type": "string",
       "required": true,
-      "minLen": 2,
-      "maxLen": 2
+      "min": 2,
+      "max": 2
     },
     {
       "name": "title",
