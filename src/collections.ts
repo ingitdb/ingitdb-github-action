@@ -1,5 +1,5 @@
 import {readJSON, writeJSON} from './json-io';
-import {readdir, stat} from 'fs/promises';
+import {promises as fsp} from 'fs';
 import {join} from 'path';
 import {Collection} from './models';
 
@@ -35,7 +35,7 @@ async function processCollectionRecords(
   collection: ICollection
 ): Promise<void> {
   console.log('processCollectionRecords', collection);
-  const files = await readdir(collection.definition.dir);
+  const files = await fsp.readdir(collection.definition.dir);
   const tasks = files.map(async file =>
     processCollectionDirItem(collection, file)
   );
@@ -48,10 +48,10 @@ async function processCollectionDirItem(
   name: string
 ): Promise<unknown> {
   const path = join(collection.definition.dir, name);
-  console.log('processCollectionDirItem', path);
+  // console.log('processCollectionDirItem', path);
   try {
-    const stats = await stat(path);
-    console.log(stats);
+    const stats = await fsp.stat(path);
+    // console.log(stats);
     if (stats.isDirectory()) {
       return processRecordDir(collection, path);
     }
@@ -65,7 +65,7 @@ async function processRecordDir(
   collection: ICollection,
   path: string
 ): Promise<void> {
-  console.log('processRecordDir', path);
+  // console.log('processRecordDir', path);
   // return Promise.resolve();
   const jsonPath = `${path}/record.json`;
   try {

@@ -3,7 +3,7 @@
 // running in a browser.
 // You do not need to install this dependency, it is part of the
 // standard library.
-import {readFile, writeFile} from 'fs/promises';
+import {promises as fsp} from 'fs';
 import {readFileSync} from 'fs';
 import {stringifySorted} from './json-sorter';
 
@@ -14,9 +14,9 @@ export function readJSONSync(filename: string): unknown {
 }
 
 export async function readJSON(filePath: string): Promise<unknown> {
-  const buffer = await readFile(filePath);
+  const buffer = await fsp.readFile(filePath);
   const s = buffer.toString();
-  console.log('content:', s);
+  // console.log('content:', s);
   const json = JSON.parse(s);
   return json;
 }
@@ -27,5 +27,5 @@ export async function writeJSON(
 ): Promise<void> {
   const s = stringifySorted(data as any);
   // console.log(filePath, ":\n", s);
-  await writeFile(filePath, s);
+  await fsp.writeFile(filePath, s);
 }

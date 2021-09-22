@@ -18,7 +18,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.processCollections = void 0;
 const json_io_1 = __nccwpck_require__(954);
-const promises_1 = __nccwpck_require__(225);
+const fs_1 = __nccwpck_require__(747);
 const path_1 = __nccwpck_require__(622);
 function processCollections(collections) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -48,7 +48,7 @@ function processCollection(definition) {
 function processCollectionRecords(collection) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('processCollectionRecords', collection);
-        const files = yield (0, promises_1.readdir)(collection.definition.dir);
+        const files = yield fs_1.promises.readdir(collection.definition.dir);
         const tasks = files.map((file) => __awaiter(this, void 0, void 0, function* () { return processCollectionDirItem(collection, file); }));
         yield Promise.all(tasks);
         return Promise.resolve();
@@ -57,10 +57,10 @@ function processCollectionRecords(collection) {
 function processCollectionDirItem(collection, name) {
     return __awaiter(this, void 0, void 0, function* () {
         const path = (0, path_1.join)(collection.definition.dir, name);
-        console.log('processCollectionDirItem', path);
+        // console.log('processCollectionDirItem', path);
         try {
-            const stats = yield (0, promises_1.stat)(path);
-            console.log(stats);
+            const stats = yield fs_1.promises.stat(path);
+            // console.log(stats);
             if (stats.isDirectory()) {
                 return processRecordDir(collection, path);
             }
@@ -73,7 +73,7 @@ function processCollectionDirItem(collection, name) {
 }
 function processRecordDir(collection, path) {
     return __awaiter(this, void 0, void 0, function* () {
-        console.log('processRecordDir', path);
+        // console.log('processRecordDir', path);
         // return Promise.resolve();
         const jsonPath = `${path}/record.json`;
         try {
@@ -110,20 +110,20 @@ exports.writeJSON = exports.readJSON = exports.readJSONSync = void 0;
 // running in a browser.
 // You do not need to install this dependency, it is part of the
 // standard library.
-const promises_1 = __nccwpck_require__(225);
 const fs_1 = __nccwpck_require__(747);
+const fs_2 = __nccwpck_require__(747);
 const json_sorter_1 = __nccwpck_require__(786);
 // Function to read and parse a JSON
 function readJSONSync(filename) {
-    const buffer = (0, fs_1.readFileSync)(filename);
+    const buffer = (0, fs_2.readFileSync)(filename);
     return JSON.parse(buffer.toString());
 }
 exports.readJSONSync = readJSONSync;
 function readJSON(filePath) {
     return __awaiter(this, void 0, void 0, function* () {
-        const buffer = yield (0, promises_1.readFile)(filePath);
+        const buffer = yield fs_1.promises.readFile(filePath);
         const s = buffer.toString();
-        console.log('content:', s);
+        // console.log('content:', s);
         const json = JSON.parse(s);
         return json;
     });
@@ -133,7 +133,7 @@ function writeJSON(data, filePath) {
     return __awaiter(this, void 0, void 0, function* () {
         const s = (0, json_sorter_1.stringifySorted)(data);
         // console.log(filePath, ":\n", s);
-        yield (0, promises_1.writeFile)(filePath, s);
+        yield fs_1.promises.writeFile(filePath, s);
     });
 }
 exports.writeJSON = writeJSON;
@@ -764,13 +764,6 @@ exports.toCommandProperties = toCommandProperties;
 /***/ ((module) => {
 
 module.exports = require("fs");
-
-/***/ }),
-
-/***/ 225:
-/***/ ((module) => {
-
-module.exports = require("fs/promises");
 
 /***/ }),
 
