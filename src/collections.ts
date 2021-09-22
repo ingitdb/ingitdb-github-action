@@ -68,6 +68,11 @@ async function processRecordDir(
   console.log('processRecordDir', path);
   // return Promise.resolve();
   const jsonPath = `${path}/record.json`;
-  const record = await readJSON(jsonPath);
-  return writeJSON(record, jsonPath);
+  try {
+    const record = await readJSON(jsonPath);
+    return writeJSON(record, jsonPath);
+  } catch (err) {
+    console.log(jsonPath, 'ERROR:', err);
+    return Promise.resolve();
+  }
 }

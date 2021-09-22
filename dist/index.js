@@ -17,6 +17,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.processCollections = void 0;
+const json_io_1 = __nccwpck_require__(954);
 const promises_1 = __nccwpck_require__(225);
 const path_1 = __nccwpck_require__(622);
 function processCollections(collections) {
@@ -73,10 +74,16 @@ function processCollectionDirItem(collection, name) {
 function processRecordDir(collection, path) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('processRecordDir', path);
-        return Promise.resolve();
-        // const jsonPath = `${path}/record.json`;
-        // const record = await readJSON(jsonPath);
-        // return writeJSON(record, jsonPath);
+        // return Promise.resolve();
+        const jsonPath = `${path}/record.json`;
+        try {
+            const record = yield (0, json_io_1.readJSON)(jsonPath);
+            return (0, json_io_1.writeJSON)(record, jsonPath);
+        }
+        catch (err) {
+            console.log(jsonPath, 'ERROR:', err);
+            return Promise.resolve();
+        }
     });
 }
 
@@ -103,6 +110,7 @@ exports.writeJSON = exports.readJSON = exports.readJSONSync = void 0;
 // running in a browser.
 // You do not need to install this dependency, it is part of the
 // standard library.
+const promises_1 = __nccwpck_require__(225);
 const fs_1 = __nccwpck_require__(747);
 const json_sorter_1 = __nccwpck_require__(786);
 // Function to read and parse a JSON
@@ -113,31 +121,19 @@ function readJSONSync(filename) {
 exports.readJSONSync = readJSONSync;
 function readJSON(filePath) {
     return __awaiter(this, void 0, void 0, function* () {
-        return new Promise((resolve, reject) => {
-            (0, fs_1.readFile)(filePath, (err, buffer) => {
-                if (err) {
-                    reject(err);
-                    return;
-                }
-                const s = buffer.toString();
-                const json = JSON.parse(s);
-                resolve(json);
-            });
-        });
+        const buffer = yield (0, promises_1.readFile)(filePath);
+        const s = buffer.toString();
+        console.log('content:', s);
+        const json = JSON.parse(s);
+        return json;
     });
 }
 exports.readJSON = readJSON;
 function writeJSON(data, filePath) {
     return __awaiter(this, void 0, void 0, function* () {
-        return new Promise((resolve, reject) => {
-            const s = (0, json_sorter_1.stringifySorted)(data);
-            console.log(filePath, ':\n', s);
-            (0, fs_1.writeFile)(filePath, s, err => {
-                if (err)
-                    reject(err);
-                resolve();
-            });
-        });
+        const s = (0, json_sorter_1.stringifySorted)(data);
+        // console.log(filePath, ":\n", s);
+        yield (0, promises_1.writeFile)(filePath, s);
     });
 }
 exports.writeJSON = writeJSON;
