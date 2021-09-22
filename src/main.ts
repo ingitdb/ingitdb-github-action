@@ -1,10 +1,10 @@
 import * as core from "@actions/core";
-import {readJSON} from './io'
+import {readJSONSync} from './json-io'
 import { wait } from "./wait";
 
 async function run(): Promise<void> {
   try {
-    const data = readJSON(".ingitdb/.ingitdb.json");
+    const data = readJSONSync(".ingitdb/.ingitdb.json");
     // eslint-disable-next-line no-console
     console.log(".ingitdb.json:", data);
 

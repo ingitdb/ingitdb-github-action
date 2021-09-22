@@ -2,24 +2,81 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 915:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ 954:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.readJSON = void 0;
+exports.writeJSON = exports.readJSON = exports.readJSONSync = void 0;
 // import the fs module, which allows us to do filesystem operations
 // fs comes from nodejs, this is impossible with normal javascript
 // running in a browser.
 // You do not need to install this dependency, it is part of the
 // standard library.
 const fs_1 = __nccwpck_require__(747);
+const json_sorter_1 = __nccwpck_require__(786);
 // Function to read and parse a JSON
-function readJSON(filename) {
+function readJSONSync(filename) {
     const buffer = (0, fs_1.readFileSync)(filename);
     return JSON.parse(buffer.toString());
 }
+exports.readJSONSync = readJSONSync;
+function readJSON(filePath) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve, reject) => {
+            (0, fs_1.readFile)(filePath, (err, buffer) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(JSON.parse(buffer.toString()));
+            });
+        });
+    });
+}
 exports.readJSON = readJSON;
+function writeJSON(data, filePath) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve, reject) => {
+            (0, fs_1.writeFile)(filePath, (0, json_sorter_1.stringifySorted)(data), err => {
+                if (err)
+                    reject(err);
+                resolve();
+            });
+        });
+    });
+}
+exports.writeJSON = writeJSON;
+
+
+/***/ }),
+
+/***/ 786:
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.stringifySorted = void 0;
+// Spec http://www.ecma-international.org/ecma-262/6.0/#sec-json.stringify
+const replacer = (key, value) => value instanceof Object && !(value instanceof Array)
+    ? Object.keys(value)
+        .sort()
+        .reduce((sorted, key) => {
+        sorted[key] = value[key];
+        return sorted;
+    }, {})
+    : value;
+// Usage: JSON.stringify({c: 1, a: { d: 0, c: 1, e: {a: 0, 1: 4}}}, replacer);
+const stringifySorted = (value) => JSON.stringify(value, replacer, 2);
+exports.stringifySorted = stringifySorted;
 
 
 /***/ }),
@@ -58,12 +115,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
-const io_1 = __nccwpck_require__(915);
+const json_io_1 = __nccwpck_require__(954);
 const wait_1 = __nccwpck_require__(817);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const data = (0, io_1.readJSON)(".ingitdb/.ingitdb.json");
+            const data = (0, json_io_1.readJSONSync)(".ingitdb/.ingitdb.json");
             // eslint-disable-next-line no-console
             console.log(".ingitdb.json:", data);
             const ms = core.getInput("milliseconds");
