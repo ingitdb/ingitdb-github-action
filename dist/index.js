@@ -2,6 +2,87 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 309:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.processCollections = void 0;
+const promises_1 = __nccwpck_require__(225);
+const path_1 = __nccwpck_require__(622);
+function processCollections(collections) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            console.log('processCollections');
+            const tasks = collections.map(processCollection);
+            try {
+                yield Promise.all(tasks); // Gather up the results.
+                resolve();
+            }
+            catch (err) {
+                reject(err);
+            }
+        }));
+    });
+}
+exports.processCollections = processCollections;
+function processCollection(definition) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log('processCollection', definition);
+        const records = {};
+        const collection = { definition, records };
+        yield processCollectionRecords(collection);
+        return Promise.resolve();
+    });
+}
+function processCollectionRecords(collection) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log('processCollectionRecords', collection);
+        const files = yield (0, promises_1.readdir)(collection.definition.dir);
+        const tasks = files.map((file) => __awaiter(this, void 0, void 0, function* () { return processCollectionDirItem(collection, file); }));
+        yield Promise.all(tasks);
+        return Promise.resolve();
+    });
+}
+function processCollectionDirItem(collection, name) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const path = (0, path_1.join)(collection.definition.dir, name);
+        console.log('processCollectionDirItem', path);
+        try {
+            const stats = yield (0, promises_1.stat)(path);
+            console.log(stats);
+            if (stats.isDirectory()) {
+                return processRecordDir(collection, path);
+            }
+        }
+        catch (err) {
+            console.log('ERROR:', err);
+        }
+        return Promise.resolve();
+    });
+}
+function processRecordDir(collection, path) {
+    return __awaiter(this, void 0, void 0, function* () {
+        console.log('processRecordDir', path);
+        return Promise.resolve();
+        // const jsonPath = `${path}/record.json`;
+        // const record = await readJSON(jsonPath);
+        // return writeJSON(record, jsonPath);
+    });
+}
+
+
+/***/ }),
+
 /***/ 954:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -36,8 +117,11 @@ function readJSON(filePath) {
             (0, fs_1.readFile)(filePath, (err, buffer) => {
                 if (err) {
                     reject(err);
+                    return;
                 }
-                resolve(JSON.parse(buffer.toString()));
+                const s = buffer.toString();
+                const json = JSON.parse(s);
+                resolve(json);
             });
         });
     });
@@ -46,7 +130,9 @@ exports.readJSON = readJSON;
 function writeJSON(data, filePath) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => {
-            (0, fs_1.writeFile)(filePath, (0, json_sorter_1.stringifySorted)(data), err => {
+            const s = (0, json_sorter_1.stringifySorted)(data);
+            console.log(filePath, ':\n', s);
+            (0, fs_1.writeFile)(filePath, s, err => {
                 if (err)
                     reject(err);
                 resolve();
@@ -115,21 +201,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
+const collections_1 = __nccwpck_require__(309);
 const json_io_1 = __nccwpck_require__(954);
 const wait_1 = __nccwpck_require__(817);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const data = (0, json_io_1.readJSONSync)(".ingitdb/.ingitdb.json");
+            const data = (0, json_io_1.readJSONSync)('.ingitdb/.ingitdb.json');
             // eslint-disable-next-line no-console
-            console.log(".ingitdb.json:", data);
-            const ms = core.getInput("milliseconds");
+            console.log('.ingitdb.json:', data);
+            const ms = core.getInput('milliseconds');
             // eslint-disable-next-line i18n-text/no-en
             core.debug(`Waiting ${ms} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
             core.debug(new Date().toTimeString());
             yield (0, wait_1.wait)(parseInt(ms, 10));
             core.debug(new Date().toTimeString());
-            core.setOutput("time", new Date().toTimeString());
+            //
+            core.setOutput('time', new Date().toTimeString());
+            yield (0, collections_1.processCollections)([
+                { dir: 'test_data/countries', recordMode: 'directory' }
+            ]);
         }
         catch (error) {
             core.setFailed(error.message);
@@ -677,6 +768,13 @@ exports.toCommandProperties = toCommandProperties;
 /***/ ((module) => {
 
 module.exports = require("fs");
+
+/***/ }),
+
+/***/ 225:
+/***/ ((module) => {
+
+module.exports = require("fs/promises");
 
 /***/ }),
 

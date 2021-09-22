@@ -3,8 +3,8 @@
 // running in a browser.
 // You do not need to install this dependency, it is part of the
 // standard library.
-import { readFile, readFileSync, writeFile } from "fs";
-import { stringifySorted } from "./json-sorter";
+import {readFile, readFileSync, writeFile} from 'fs';
+import {stringifySorted} from './json-sorter';
 
 // Function to read and parse a JSON
 export function readJSONSync(filename: string): unknown {
@@ -17,8 +17,11 @@ export async function readJSON(filePath: string): Promise<unknown> {
     readFile(filePath, (err, buffer) => {
       if (err) {
         reject(err);
+        return;
       }
-      resolve(JSON.parse(buffer.toString()));
+      const s = buffer.toString();
+      const json = JSON.parse(s);
+      resolve(json);
     });
   });
 }
@@ -29,7 +32,7 @@ export async function writeJSON(
 ): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     const s = stringifySorted(data as any);
-    console.log(filePath, ":\n", s);
+    console.log(filePath, ':\n', s);
     writeFile(filePath, s, err => {
       if (err) reject(err);
       resolve();

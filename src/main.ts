@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
-import { readJSONSync } from './json-io';
-import { wait } from './wait';
+import {processCollections} from './collections';
+import {readJSONSync} from './json-io';
+import {wait} from './wait';
 
 async function run(): Promise<void> {
   try {
@@ -15,8 +16,12 @@ async function run(): Promise<void> {
     core.debug(new Date().toTimeString());
     await wait(parseInt(ms, 10));
     core.debug(new Date().toTimeString());
-
+    //
     core.setOutput('time', new Date().toTimeString());
+
+    await processCollections([
+      {dir: 'test_data/countries', recordMode: 'directory'}
+    ]);
   } catch (error) {
     core.setFailed((error as Error).message);
   }
