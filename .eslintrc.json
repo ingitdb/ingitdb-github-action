@@ -42,7 +42,7 @@
       "@typescript-eslint/require-array-sort-compare": "off",
       "@typescript-eslint/restrict-plus-operands": "error",
       "semi": "off",
-      "@typescript-eslint/semi": ["error", "never"],
+      "@typescript-eslint/semi": ["off", "never"],
       "@typescript-eslint/type-annotation-spacing": "error",
       "@typescript-eslint/unbound-method": "error"
     },

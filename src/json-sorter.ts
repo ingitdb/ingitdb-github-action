@@ -4,11 +4,11 @@ const replacer = (key: unknown, value: any) =>
     ? Object.keys(value)
         .sort()
         .reduce((sorted: any, key: string) => {
-          sorted[key] = value[key]
-          return sorted
+          sorted[key] = value[key];
+          return sorted;
         }, {})
-    : value
+    : value;
 // Usage: JSON.stringify({c: 1, a: { d: 0, c: 1, e: {a: 0, 1: 4}}}, replacer);
 
 export const stringifySorted = (value: any) =>
-  JSON.stringify(value, replacer, 2)
+  JSON.stringify(value, replacer, 2);
