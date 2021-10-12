@@ -1,6 +1,6 @@
 <img alt="typescript-action status" src="https://github.com/ingitdb/ingitdb-github-action/workflows/build-test/badge.svg"></a>
 
-# inGitDB GitHub Action
+# IngitDB GitHub Action
 
 <a href="https://github.com/actions/ingitdb/ingitdb-github-action">https://github.com/ingitdb/ingitdb-github-action</a>
 
